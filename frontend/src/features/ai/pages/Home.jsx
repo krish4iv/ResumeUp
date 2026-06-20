@@ -1,10 +1,28 @@
+import { useState, useRef } from "react"
+import { useInterview } from "../hooks/useInterview"
+import { useNavigate } from "react-router-dom"
 
 function Home() {
+    const navigate = useNavigate()
     const { loading, generateReport } = useInterview()
-    const {jobDescription, setJobDescription} = useJobDescription()
+    const [jobDescription, setJobDescription] = useState("")
+    const [selfDescription, setSelfDescription] = useState("")
+    const resumeInputRef = useRef(null)
 
+    const handleGenerateReport = async () => {
+        const resumeFile = resumeInputRef.current.files[0]
+        
+        const result = await generateReport({jobDescription, selfDescription, resumeFile})
+        if (result) {
+            navigate( `/interview/${result._id}`)
+        }
+    }
 
-
+    if(loading){
+    return (<div className="flex items-center justify-center h-screen">
+      <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-black">.</div>
+    </div>)
+  }
     
 return (
         <div className="relative min-h-screen w-full overflow-hidden bg-[#070b14] text-white flex items-center justify-center px-4 sm:px-8 py-10">
@@ -44,6 +62,7 @@ return (
                             Job description
                         </label>
                         <textarea
+                            onChange={(e)=> setJobDescription(e.target.value)}
                             className="glass-input flex-1 resize-none"
                             name="jobdescription"
                             id="jobdescription"
@@ -80,6 +99,7 @@ return (
                             </label>
                             <input
                                 type="file"
+                                ref={resumeInputRef}
                                 id="resume"
                                 accept=".pdf,.doc,.docx"
                                 className="sr-only" />
@@ -93,13 +113,14 @@ return (
                                 Self description
                             </label>
                             <textarea
+                                onChange={(e)=> setSelfDescription(e.target.value)}
                                 className="glass-input flex-1 resize-none min-h-32"
                                 name="selfDescription"
                                 id="selfDescription"
                                 placeholder="Tell us about your background, what you're proud of, and what you're aiming for…" />
                         </div>
 
-                        <button className="generate-btn mt-1">
+                        <button className="generate-btn mt-1" onClick={handleGenerateReport}>
                             Generate interview report
                         </button>
                     </div>
