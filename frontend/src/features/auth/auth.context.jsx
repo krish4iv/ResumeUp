@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from "react";
-import { getMe } from "./api/auth.api";
+import { getMe } from "./services/auth.api";
 export const AuthContext = createContext();
 
 export const AuthProvider = ({children}) =>{
@@ -8,9 +8,16 @@ export const AuthProvider = ({children}) =>{
 
     useEffect(()=>{
         const getAndSetUser = async ()=>{
-            const data = await getMe();
-            setUser(data.user);
-            setLoading(false);
+
+            try {
+                const data = await getMe();
+                setUser(data.user);
+            } catch (err) {
+                console.log("Get Me Error:", err.response?.data);
+                console.log("Status:", err.response?.status);
+            } finally {
+                setLoading(false);
+            }
         }
         getAndSetUser();
     },[])

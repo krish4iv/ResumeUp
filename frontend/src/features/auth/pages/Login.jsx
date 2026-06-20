@@ -16,7 +16,7 @@ const Login = () => {
   }
   if(loading){
     return (<div className="flex items-center justify-center h-screen">
-      <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-white"></div>
+      <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-black">.</div>
     </div>)
   }
 
@@ -31,7 +31,7 @@ const Login = () => {
 
       {/* Glass Card */}
       <div className="relative z-10 w-full max-w-sm mx-4 rounded-2xl p-8
-        bg-white/[0.08] border border-white/[0.18]
+        bg-white/8 border border-white/18
         backdrop-blur-2xl
         shadow-[0_8px_32px_rgba(0,0,0,0.35),inset_0_1px_0_rgba(255,255,255,0.15)]">
 
@@ -55,8 +55,8 @@ const Login = () => {
               placeholder="you@example.com"
               onChange={(e) => { setEmail(e.target.value) }}
               className="w-full px-3.5 py-2.5 rounded-xl text-sm text-white placeholder-white/30
-                bg-white/[0.07] border border-white/[0.15]
-                focus:outline-none focus:border-violet-500/70 focus:bg-white/[0.11]
+                bg-white/7 border border-white/15
+                focus:outline-none focus:border-violet-500/70 focus:bg-white/11
                 transition-colors duration-200"
             />
           </div>
@@ -77,8 +77,8 @@ const Login = () => {
               placeholder="••••••••"
               onChange={(e) => { setPassword(e.target.value) }}
               className="w-full px-3.5 py-2.5 rounded-xl text-sm text-white placeholder-white/30
-                bg-white/[0.07] border border-white/[0.15]
-                focus:outline-none focus:border-violet-500/70 focus:bg-white/[0.11]
+                bg-white/7 border border-white/15
+                focus:outline-none focus:border-violet-500/70 focus:bg-white/11
                 transition-colors duration-200"
             />
           </div>
@@ -87,7 +87,7 @@ const Login = () => {
           <button
             type="submit"
             className="w-full py-3 rounded-xl text-sm font-semibold text-white tracking-wide
-              bg-gradient-to-r from-violet-600 to-indigo-500
+              bg-linear-to-r from-violet-600 to-indigo-500
               shadow-[0_4px_16px_rgba(124,58,237,0.45)]
               hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(124,58,237,0.6)]
               active:scale-[0.98]
@@ -107,8 +107,8 @@ const Login = () => {
             <button
               type="button"
               className="flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-medium text-white/70
-                bg-white/[0.07] border border-white/[0.13]
-                hover:bg-white/[0.12] hover:border-white/20 hover:text-white
+                bg-white/7 border border-white/13
+                hover:bg-white/12 hover:border-white/20 hover:text-white
                 transition-all duration-150">
               {/* Google icon */}
               <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
@@ -122,8 +122,8 @@ const Login = () => {
             <button
               type="button"
               className="flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-medium text-white/70
-                bg-white/[0.07] border border-white/[0.13]
-                hover:bg-white/[0.12] hover:border-white/20 hover:text-white
+                bg-white/7 border border-white/13
+                hover:bg-white/12 hover:border-white/20 hover:text-white
                 transition-all duration-150">
               {/* GitHub icon */}
               <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
