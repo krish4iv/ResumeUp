@@ -1,4 +1,4 @@
-const axios = require('axios')
+import axios from 'axios'
 
 const api = axios.create({
     baseURL: 'http://localhost:3000/api',
@@ -9,23 +9,24 @@ export const getInterviewReport = async ({jobDescription, selfDescription , resu
     const formData = new FormData()
     formData.append('jobDescription', jobDescription)
     formData.append('selfDescription', selfDescription)
-    formData.append('resumeFile', resumeFile)
+    formData.append('resume', resumeFile)
     
-    const response = await api.post('/api/interview/', formData, {
-        headers: {
-            'Content-Type': 'multipart/form-data'
-        }
-    })
+    const response = await api.post('/interview/', formData)
     
     return response.data
 }
 
 export const getInterviewReportByID = async (id) => {
-    const response = await api.get(`/api/report/${id}`)
+    const response = await api.get(`/interview/report/${id}`)
     return response.data
 }
 
 export const getAllInterviewReports = async () => {
-    const response = await api.get('/api/reports/')
+    const response = await api.get('/interview/reports')
+    return response.data
+}
+
+export const generateInterviewResumePdf = async (interviewReportId) => {
+    const response = await api.post(`/interview/resume/pdf/${interviewReportId}`, null, { responseType: 'blob' })
     return response.data
 }

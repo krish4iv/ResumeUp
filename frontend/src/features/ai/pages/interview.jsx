@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useInterview } from '../hooks/useInterview.js'
 import { useNavigate, useParams } from 'react-router'
 
+
 const NAV_ITEMS = [
     {
         id: 'technical', label: 'Technical Questions',
