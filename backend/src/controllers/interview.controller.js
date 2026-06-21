@@ -4,6 +4,9 @@ const { InterviewReportModel } = require('../models/interviewreport.model')
 
 async function createInterviewReport(req, res) {
     try {
+        if (!req.body.jobDescription) return res.status(400).json({ message: "jobDescription is required." })
+        if (!req.file) return res.status(400).json({ message: "Resume file is required." })
+        
         const resumeContent = await (new pdfParse.PDFParse(Uint8Array.from(req.file.buffer))).getText()
         const { selfDescription, jobDescription } = req.body
 

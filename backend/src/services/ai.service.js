@@ -59,7 +59,7 @@ async function generateInterviewReport({ resume, selfDescription, jobDescription
     return interviewReportSchema.parse(JSON.parse(response.text));
 }
 
-async function generatePdfFromHtml(htmlContent) {
+ async function generatePdfFromHtml(htmlContent) {
     const browser = await puppeteer.launch({
         args: ['--no-sandbox', '--disable-setuid-sandbox']
     });
@@ -86,50 +86,51 @@ async function generateResumePdf({ resume, selfDescription, jobDescription }) {
 
     const prompt = `You are an expert resume writer and web designer. Generate a single-page resume as a self-contained HTML document.
 
-CANDIDATE DETAILS:
-Resume/Background: ${resume}
-Self Description: ${selfDescription}
-Target Job Description: ${jobDescription}
+    CANDIDATE DETAILS:
+    Resume/Background: ${resume}
+    Self Description: ${selfDescription}
+    Target Job Description: ${jobDescription}
 
-STRICT REQUIREMENTS — follow every rule exactly:
+    STRICT REQUIREMENTS — follow every rule exactly:
 
-PAGE & SIZING:
-- The entire resume MUST fit on exactly ONE A4 page (210mm × 297mm) with 12mm top/bottom and 14mm left/right margins rendered by Puppeteer.
-- Set the root font-size to 12px. Use rem/em throughout so scaling is consistent.
-- Set body margin/padding to 0. Do NOT add any wrapper padding — the PDF renderer handles margins.
-- Use CSS: html, body { width: 210mm; box-sizing: border-box; }
+    PAGE & SIZING:
+    - The entire resume MUST fit on exactly ONE A4 page (210mm × 297mm) with 12mm top/bottom and 14mm left/right margins rendered by Puppeteer.
+    - Set the root font-size to 12px. Use rem/em throughout so scaling is consistent.
+    - Set body margin/padding to 0. Do NOT add any wrapper padding — the PDF renderer handles margins.
+    - Use CSS: html, body { width: 210mm; box-sizing: border-box; }
 
-TYPOGRAPHY (LaTeX-inspired academic style):
-- Font stack: 'Linux Libertine', 'Georgia', 'Times New Roman', serif  for body text.
-- Name/heading: 'Linux Biolinum', 'Helvetica Neue', Arial, sans-serif — bold, ~22px.
-- Section headings: small-caps via font-variant: small-caps; font-size: 1em; font-weight: bold; border-bottom: 1px solid #333; margin-bottom: 3px.
-- Body text color: #1a1a1a. Links: #1a1a1a, no underline.
-- Line-height: 1.35 throughout.
+    TYPOGRAPHY (LaTeX-inspired academic style):
+    - Font stack: 'Linux Libertine', 'Georgia', 'Times New Roman', serif  for body text.
+    - Name/heading: 'Linux Biolinum', 'Helvetica Neue', Arial, sans-serif — bold, ~22px.
+    - Section headings: small-caps via font-variant: small-caps; font-size: 1em; font-weight: bold; border-bottom: 1px solid #333; margin-bottom: 3px.
+    - Body text color: #1a1a1a. Links: #1a1a1a, no underline.
+    - Line-height: 1.35 throughout.
 
-LAYOUT:
-- Single-column layout.
-- Header block: name centered large, then one line below: email | phone | LinkedIn | GitHub | location — centered, separated by thin vertical pipes (|), font-size 0.82em.
-- Sections in order: Summary (2–3 tight sentences), Experience, Projects, Education, Skills.
-- Each section uses a heading rule then tight content.
-- Experience & Project entries: role/title bold left, date right (flexbox space-between); company/tech italic below; then 2–3 bullet points starting with strong action verbs. Bullets use a real bullet (•) with margin-left: 1em, no list padding.
-- Skills: inline comma-separated under sub-labels (Languages:, Frameworks:, Tools:) on one or two lines.
+    LAYOUT:
+    - Single-column layout.
+    - Header block: name centered large, then one line below: email | phone | LinkedIn | GitHub | location — centered, separated by thin vertical pipes (|), font-size 0.82em.
+    - Sections in order: Summary (2–3 tight sentences), Experience, Projects, Education, Skills.
+    - Each section uses a heading rule then tight content.
+    - Experience & Project entries: role/title bold left, date right (flexbox space-between); company/tech italic below; then 2–3 bullet points starting with strong action verbs. Bullets use a real bullet (•) with margin-left: 1em, no list padding.
+    - Skills: inline comma-separated under sub-labels (Languages:, Frameworks:, Tools:) on one or two lines.
 
-CONTENT RULES:
-- Be ruthlessly concise. Max 3 bullet points per experience/project. Each bullet max 1 line.
-- Omit anything not relevant to the job description.
-- Do not pad with filler. No "References available upon request."
-- Numbers/metrics wherever possible (e.g. "reduced load time by 40%").
-- Must sound like a real human wrote it — no AI buzzword padding.
-- ATS-friendly: no tables, no columns, no text in images, semantic HTML tags only.
+    CONTENT RULES:
+    - Be ruthlessly concise. Max 3 bullet points per experience/project. Each bullet max 1 line.
+    - Omit anything not relevant to the job description.
+    - Do not pad with filler. No "References available upon request."
+    - Numbers/metrics wherever possible (e.g. "reduced load time by 40%").
+    - Must sound like a real human wrote it — no AI buzzword padding.
+    - ATS-friendly: no tables, no columns, no text in images, semantic HTML tags only.
 
-TECHNICAL:
-- Output a complete HTML document: <!DOCTYPE html><html>...</html>
-- All CSS must be inline in a <style> tag in <head>. No external resources.
-- Do NOT use CSS page-break or @page rules — Puppeteer handles that.
-- Do NOT use CSS grid or flexbox for the overall page layout (single column only). Flexbox only within header and entry title rows.
-- Ensure @media print is consistent with screen styles.
-`;
+    TECHNICAL:
+    - Output a complete HTML document: <!DOCTYPE html><html>...</html>
+    - All CSS must be inline in a <style> tag in <head>. No external resources.
+    - Do NOT use CSS page-break or @page rules — Puppeteer handles that.
+    - Do NOT use CSS grid or flexbox for the overall page layout (single column only). Flexbox only within header and entry title rows.
+    - Ensure @media print is consistent with screen styles.
+    `;
 
+    const t1 = Date.now()
     const response = await ai.models.generateContent({
         model: 'gemini-2.5-flash',
         contents: prompt,
@@ -139,13 +140,15 @@ TECHNICAL:
             maxOutputTokens: 16000,
         },
     });
+    console.log(`[AI] Gemini response: ${Date.now() - t1}ms`)
 
     const jsonContent = resumePdfSchema.parse(JSON.parse(response.text));
+
+    const t2 = Date.now()
     const pdf = await generatePdfFromHtml(jsonContent.html);
+    console.log(`[PDF] Puppeteer render: ${Date.now() - t2}ms`)
+
     return pdf;
 }
 
-module.exports = {
-    generateInterviewReport,
-    generateResumePdf
-};
+module.exports = { interviewReportSchema, generateInterviewReport, generateResumePdf, generatePdfFromHtml }
