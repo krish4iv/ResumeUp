@@ -2,7 +2,9 @@
 
 An AI-powered interview preparation app that analyzes your resume and a target job description to generate personalized technical questions, behavioral questions, skill gap analysis, a day-wise preparation roadmap, and a tailored resume PDF.
 
----
+<img width="1909" height="931" alt="{3C50330B-34F4-43B0-9399-B4CECF64F0A6}" src="https://github.com/user-attachments/assets/f69a344f-ed09-43fe-9eef-3b531ce4697e" />
+<img width="1902" height="932" alt="{1AA632AC-06C3-4FCB-AC71-76DF3EF16D2B}" src="https://github.com/user-attachments/assets/08cf5beb-487e-47d1-8cb5-b9ca21c45b29" />
+
 
 ## Features
 
